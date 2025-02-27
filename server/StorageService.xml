@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<database host="127.0.0.1" user="root" password="admin" dbms="sqlite" />
+	<connection host="127.0.0.1" port="80" />
+	<logger level="0" path="" />
+</configuration>

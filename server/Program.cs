@@ -8,4 +8,4 @@ if (ver is not null)
 Console.WriteLine($"Версия сервера: {version}");
 Console.WriteLine($"Время запуска сервера {DateTime.Now}");
 
-ConfigManager config = new ConfigManager();
+IConfiguration config = new ConfigManager();
