@@ -1,0 +1,42 @@
+form {
+  width: 235px;
+}
+
+.container {
+  margin-left: 10px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.container input, select {
+  width: 100%;
+  outline: none;
+  border: 1px solid #525760;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.container p, label  {
+  margin-bottom: 4px;
+}
+
+.date {
+  width: 100%;
+  border: 1px solid black;
+}
+
+.btn {
+  background: #4480f3;
+  color: #fff;
+  padding: 8px 0px;
+  width: 100%;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #2e70eb;
+  transition: background 0.3s linear;
+}
