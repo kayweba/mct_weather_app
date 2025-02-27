@@ -1,10 +1,10 @@
 import './App.css';
-import { WeatherMeasurementForm } from './components/WeatherMeasurementForm/WeatherMeasurementForm';
+import { LeftPanel } from './components/LeftPanel/LeftPanel';
 
 function App() {
   return (
     <>
-      <WeatherMeasurementForm />
+      <LeftPanel />
     </>
   );
 }

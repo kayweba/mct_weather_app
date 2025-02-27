@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { PartOfDay, WeatherMeasurement } from '../../models/Measurement';
+import { PartOfDay, WeatherMeasurement } from '../../../models/Measurement';
 import cls from './WeatherMeasurementForm.module.css';
+import { Button } from '../../UI/Button/Button';
 
 const partOfDayByOptionValue: Record<string, PartOfDay> = {
   '0': 0,
@@ -106,7 +107,7 @@ export function WeatherMeasurementForm() {
           />
         </div>
         <div>
-          <button className={cls.btn} onClick={(event) => sendWeatherData(event)}>Записать измерение</button>
+          <Button onClick={sendWeatherData}>Записать измерения</Button>
         </div>
       </div>
     </form>

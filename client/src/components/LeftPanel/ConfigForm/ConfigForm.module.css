@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.title {
+  margin-bottom: 5px;
+}
+
+label {
+  margin-top: 5px;
+}
