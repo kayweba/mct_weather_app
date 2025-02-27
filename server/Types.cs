@@ -1,4 +1,5 @@
-﻿using System.Dynamic;
+﻿using StorageService;
+using System.Dynamic;
 using System.Net;
 using System.Reflection;
 
@@ -6,9 +7,17 @@ namespace StorageService
 {
     public class DbConfiguration
     {
-        public DbConfiguration(string _host, string _user, string _password, string _dbmsName) 
-        { 
-            host = _host;
+        public DbConfiguration(string _host, string _user, string _password, string _dbmsName)
+        {
+            try
+            {
+                host = IPAddress.Parse(_host);
+            }
+            catch (FormatException)
+            {
+                throw new ConfigurationException("Не удается преобразовать адрес хоста. Неверный формат",
+                    (int)ConfigurationErrorCode.typecastError);
+            }
             user = _user;
             password = _password;
             switch (_dbmsName)
@@ -27,7 +36,7 @@ namespace StorageService
                     break;
             }
         }
-        public string Host 
+        public IPAddress Host 
         { 
             get => host; 
         }
@@ -44,7 +53,7 @@ namespace StorageService
             get => dbms;
         }
 
-        private string host = "";
+        private IPAddress host = IPAddress.Loopback;
         private string user = "";
         private string password = "";
         private DBMS_Type dbms = DBMS_Type.UNDEFINED;
@@ -54,7 +63,15 @@ public class ConnConfiguration
 {
     public ConnConfiguration(string _host, int _port)
     {
-        host = IPAddress.Parse(_host);
+        try
+        {
+            host = IPAddress.Parse(_host);
+        }
+        catch (FormatException)
+        {
+            throw new ConfigurationException("Не удается преобразовать адрес хоста. Неверный формат",
+                (int)ConfigurationErrorCode.typecastError);
+        }
         //TODO: parse error?
         port = _port;
     }
@@ -94,4 +111,13 @@ public enum DBMS_Type
     UNDEFINED,
     PGSQL,
     SQLITE
+}
+
+public enum ConfigurationErrorCode
+{
+    invalidRoot,
+    invalidChild,
+    invalidAttribute,
+    invalidValue,
+    typecastError
 }
