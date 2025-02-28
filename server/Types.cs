@@ -1,4 +1,5 @@
 ﻿using StorageService;
+using System.ComponentModel.Design;
 using System.Dynamic;
 using System.Net;
 using System.Reflection;
@@ -20,21 +21,25 @@ namespace StorageService
             }
             user = _user;
             password = _password;
-            switch (_dbmsName)
+            _dbmsName = _dbmsName.ToLower();
+            if (string.IsNullOrEmpty(_dbmsName))
             {
-                case "pgsql":
-                case "PgSQL":
-                    dbms = DBMS_Type.PGSQL;
-                    break;
-                case "sqlite":
-                case "SQLite":
-                    dbms = DBMS_Type.SQLITE;
-                    break;
-                default:
-                    dbms = DBMS_Type.UNDEFINED;
-                    // TODO: log wrong dbms
-                    break;
+                switch (_dbmsName)
+                {
+                    case "pgsql":
+                        dbms = DBMS_Type.PGSQL;
+                        break;
+                    case "sqlite":
+                        dbms = DBMS_Type.SQLITE;
+                        break;
+                    default:
+                        dbms = DBMS_Type.UNDEFINED;
+                        // TODO: log wrong dbms
+                        break;
+                }
             }
+            else
+                dbms = DBMS_Type.SQLITE;
         }
         public IPAddress Host 
         { 
@@ -89,10 +94,41 @@ public class ConnConfiguration
 
 public class LogConfiguration
 {
-    public LogConfiguration(uint _level, string _path)
+    public LogConfiguration() : this(3, "", "") {}
+    public LogConfiguration(uint _level, string _path, string _destination)
     {
         level = _level;
+        if (level > 3) level = 3;
         path = _path;
+        // Определяем куда писать логи
+        _destination = _destination.ToLower();
+        if (string.IsNullOrEmpty(_destination)) // Если строка с назначением не пустая
+            return;
+        dest.Clear();
+        string[] dests = _destination.Split(','); // Разделяем переданные значения
+        // Обрезаем все пробелы
+        for (int i = 0; i <  dests.Length; i++)
+            dests[i] = dests[i].Trim();
+        // Если в качестве назначения было передано silence, то логирования не будет,
+        // все остальные значения игнорируем
+        if (dests.Contains("silence"))
+        {
+            dest.Add(LOG_Destination.SILENCE);
+            return;
+        }
+        else
+        {
+            // Если передали что-то кроме SILENCE
+            if (dests.Contains("console")) dest.Add(LOG_Destination.CONSOLE);
+            if (dests.Contains("file")) dest.Add(LOG_Destination.FILE);
+            // Если передано что-то другое, то игнориуем и пишем только в лог по умолчанию
+            if (dest.Count == 0)
+            {
+                dest.Add(LOG_Destination.CONSOLE);
+                return;
+            }
+        }
+
     }
     public uint Level
     {
@@ -102,8 +138,13 @@ public class LogConfiguration
     {
         get => path;
     }
+    public List<LOG_Destination> Destination
+    {
+        get => dest;
+    }
     private uint level = 0;
     private string path = "";
+    private List<LOG_Destination> dest = new List<LOG_Destination> { LOG_Destination.CONSOLE }; // По умолчанию пишем в консоль
 }
 
 public enum DBMS_Type
@@ -113,6 +154,13 @@ public enum DBMS_Type
     SQLITE
 }
 
+public enum LOG_Destination
+{
+    SILENCE = 0,
+    FILE = 2,
+    CONSOLE = 4
+}
+
 public enum ConfigurationErrorCode
 {
     invalidRoot,
@@ -120,4 +168,10 @@ public enum ConfigurationErrorCode
     invalidAttribute,
     invalidValue,
     typecastError
+}
+public enum LogErrorCode
+{
+    dirNotFound,
+    ioFailed,
+    ioForbidden
 }

@@ -13,7 +13,7 @@ namespace StorageService
 
         private void ReadConfiguration()
         {
-            string configFileName = System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".xml";
+            configFileName = System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".xml";
             XmlDocument doc = new XmlDocument();
             try
             {
@@ -52,7 +52,7 @@ namespace StorageService
                     }
                 }
                 #endregion
-                #region 'connection'
+#region 'connection'
                 XmlNodeList connElemList = root.GetElementsByTagName("connection");
                 if (connElemList.Count == 0) throw new ConfigurationException("Отсутствует элемент конфигурации \"connection\".",
                     (int)ConfigurationErrorCode.invalidChild);
@@ -88,8 +88,8 @@ namespace StorageService
                         conConfig = new ConnConfiguration(host, port);
                     }
                 }
-                #endregion
-                #region 'logger'
+#endregion
+#region 'logger'
                 XmlNodeList loggerElemList = root.GetElementsByTagName("logger");
                 if (loggerElemList.Count == 0) throw new ConfigurationException("Отсутствует элемент конфигурации \"logger\".",
                     (int)ConfigurationErrorCode.invalidChild);
@@ -98,13 +98,15 @@ namespace StorageService
                 XmlNode? loggerElem = loggerElemList.Item(0);
                 if (loggerElem is not null)
                 {
-                    string path = "";
+                    string path = "", destination = "silence";
                     uint level = 0;
                     XmlAttributeCollection? loggerAttrs = loggerElem.Attributes;
                     if (loggerAttrs is not null)
                     {
                         XmlAttribute? attr = loggerAttrs["path"];
                         if (attr is not null) path = attr.Value;
+                        attr = loggerAttrs["destination"];
+                        if (attr is not null) destination = attr.Value;
                         attr = loggerAttrs["level"];
                         if (attr is not null)
                         {
@@ -116,26 +118,33 @@ namespace StorageService
                             {
                                 throw new ConfigurationException("Не удается преобразовать значение атрибута \"level\" в элементе \"logger\". Неверный формат.",
                                     (int)ConfigurationErrorCode.typecastError);
+
+                            }
+                            catch (OverflowException)
+                            {
+                                throw new ConfigurationException("Не удается преобразовать значение атрибута \"level\" в элементе \"logger\". Неверный формат.",
+                                    (int)ConfigurationErrorCode.typecastError);
                             }
                         }
                         else throw new ConfigurationException("Отсутствует обязательный атрибут \"level\" в элементе \"logger\".",
                             (int)ConfigurationErrorCode.invalidAttribute);
-                        logConfig = new LogConfiguration(level, path);
+                        logConfig = new LogConfiguration(level, path, destination);
                     }
                 }
-                #endregion
+#endregion
             }
+            // Пока логгера еще нет
             catch (FileNotFoundException)
             {
-                //TODO log file not found
+                LogManager.Instance().Log($"Не удалось найти файл конфигурации '{configFileName}'.", MType.Error, MSeverity.Important);
             }
             catch (XmlException ex)
             {
-                Console.WriteLine("Ошибка парсинга конфигурации. " + ex.Message);
+                LogManager.Instance().Log($"Ошибка парсинга конфигурации. {ex.Message}", MType.Error, MSeverity.Important);
             }
             catch (ConfigurationException ex)
             {
-                Console.WriteLine("Ошибка конфигурации. " + ex.Message);
+                LogManager.Instance().Log($"Ошибка конфигурации. {ex.Message}", MType.Error, MSeverity.Important);
             }
 
         }
@@ -158,5 +167,6 @@ namespace StorageService
         private DbConfiguration? dbConfig;
         private LogConfiguration? logConfig;
         private ConnConfiguration? conConfig;
+        private string configFileName = "";
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace StorageService
 {
-    class ConfigurationException : Exception
+    class BasicException : Exception
     {
-        public ConfigurationException(string _message, int _code) : base(_message)
+        public BasicException(string _message, int _code) : base(_message)
         {
             code = _code;
         }
@@ -13,5 +13,14 @@
         }
 
         private int code = -1;
+
+    }
+    class ConfigurationException : BasicException
+    {
+        public ConfigurationException(string _message, int code) : base(_message, code) { }
+    }
+    class LogException : BasicException
+    {
+        public LogException(string _message, int code) : base(_message, code) { }
     }
 }
