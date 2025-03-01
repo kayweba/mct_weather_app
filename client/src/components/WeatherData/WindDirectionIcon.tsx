@@ -16,7 +16,7 @@ export const WindDirectionIcon = (type: WindDirection | null): ReactElement => {
     case WindDirection.NORTHEAST:
       return (
         <>
-          <Icons.Direction className={cls.northEastDirection} />;
+          <Icons.Direction className={cls.northEastDirection} />
           <span>с-в</span>
         </>
       );
