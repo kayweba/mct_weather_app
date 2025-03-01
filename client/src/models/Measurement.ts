@@ -11,6 +11,26 @@ export type WeatherMeasurement = {
   force_overwrite: boolean
 }
 
+export type WeatherMeasurementOfDay = {
+  date: number
+  morning_temperature: number | null;
+  morning_pressure: number | null;
+  morning_wind_speed: number | null;
+  morning_wind_direction: WindDirection | null;
+  morning_precipitation_type:  PrecipitationType | null;
+  afternoon_temperature: number | null;
+  afternoon_pressure: number | null;
+  afternoon_wind_speed: number | null;
+  afternoon_wind_direction: WindDirection | null;
+  afternoon_precipitation_type:  PrecipitationType | null;
+  evening_temperature: number | null;
+  evening_pressure: number | null;
+  evening_wind_speed: number | null;
+  evening_wind_direction: WindDirection | null;
+  evening_precipitation_type: PrecipitationType | null;
+}
+
+
 export enum PartOfDay {
   MORNING = 0,
   AFTERNOON = 1,

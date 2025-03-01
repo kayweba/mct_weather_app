@@ -1,0 +1,16 @@
+<svg version="1.1" id="sleet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="600px"
+	 height="600px" viewBox="0 0 600 600" style="enable-background:new 0 0 600 600;" xml:space="preserve">
+<style type="text/css">
+	.cloud{fill:#E6E6E6;stroke:#000000;stroke-width:12;stroke-miterlimit:10;}
+	.raindrop{fill:#29ABE2;stroke:#000000;stroke-width:8;stroke-miterlimit:10;}
+	.snowflake{fill:#F2F2F2;stroke:#000000;stroke-width:5;stroke-miterlimit:10;}
+</style>
+<g>
+	<path class="cloud" d="M108.4,255c0-42.4,33.6-73,75.6-74.3c17.6-63.8,76.1-110.8,145.4-110.8c83.3,0,150.9,66.3,150.9,149.6
+		c34.5,4.1,61.2,37.5,61.2,73.1c0,38.4-31.1,73.5-69.5,73.5H113.4c-34.4,0-55-29.4-55-56.6C58.4,282.1,81.2,255,108.4,255z"/>
+</g>
+<g>
+	<path class="raindrop" d="M264,457.8c0,16.2-13.1,29.2-29.2,29.2 c-16.1,0-29.3-13.1-29.3-29.2c0-16.1,13.1-66.8,29.2-66.8C250.8,391,264,441.6,264,457.8z"/>
+	<path class="snowflake" d="M383.1,409.3l-23.8,27.9l0.2,0.7l35-7V453.1l-35.2-6.199l-0.2,0.699l24,27.101L363.5,486.1L351,452l-0.4,0.2L337.8,486.1L318.9,474.7l23.5-27.5v-0.4l-34.5,6.4V431l34.1,6.8 l0.2-0.399l-23.3-27.7l19.6-11.2l12.3,33.7h0.4l12.5-33.7L383.1,409.3z"/>
+</g>
+</svg>
