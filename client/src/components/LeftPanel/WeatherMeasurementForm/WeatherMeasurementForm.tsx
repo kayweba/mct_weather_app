@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { PartOfDay, WeatherMeasurement } from '../../../models/Measurement';
+//import { PartOfDay, WeatherMeasurement } from '../../../models/Measurement';
 import cls from './WeatherMeasurementForm.module.css';
 import { Button } from '../../UI/Button/Button';
 
-const partOfDayByOptionValue: Record<string, PartOfDay> = {
-  '0': 0,
-  '1': 1,
-  '2': 2,
-};
+// const partOfDayByOptionValue: Record<string, PartOfDay> = {
+//   '0': 0,
+//   '1': 1,
+//   '2': 2,
+// };
 
 export function WeatherMeasurementForm() {
-  const [weatherData, setWeatherData] = useState<WeatherMeasurement | null>(
-    null
-  );
+  // const [weatherData, setWeatherData] = useState<WeatherMeasurement | null>(
+  //   null
+  // );
 
   const [date, setDate] = useState<string>('');
   const [partOfDay, setPartOfDay] = useState<string>('0');
