@@ -18,3 +18,4 @@ do
 } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
 
 server.Stop(); // Останавливаем сервер
+LogManager.Instance().Log("Приложение завершает свою работу", MType.Information);

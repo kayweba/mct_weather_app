@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace StorageService
+﻿namespace StorageService
 {
     class FileLogger : ILogger
     {
