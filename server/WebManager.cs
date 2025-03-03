@@ -21,6 +21,11 @@ namespace StorageService.Web
                 .UseIISIntegration()
                 .UseStartup<Startup>()
                 .UseUrls($"http://{hostAddress}:{hostPort}/")
+                .ConfigureLogging(logging =>
+                {
+                    logging.AddConsole();
+                    logging.SetMinimumLevel(LogLevel.Information);
+                })
                 .Build();
         }
         public void Start()
