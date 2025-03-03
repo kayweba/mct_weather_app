@@ -3,15 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StorageService.Web.Controllers
 {
+    [ApiController]
     [Route("[controller]")]
-    public class WeatherController : Microsoft.AspNetCore.Mvc.Controller
+    public class MeasuresController : Microsoft.AspNetCore.Mvc.Controller
     {
         [HttpGet]
-        public List<Weather> Get()
+        public List<Measure> Get()
         {
-            return new List<Weather>
+            // TODO db to list Async
+            return new List<Measure>
             {
-                new Weather
+                new Measure
                 {
                     date = 1739207223,
                     morning_temperature = 10,
@@ -30,7 +32,7 @@ namespace StorageService.Web.Controllers
                     evening_wind_direction = 2,
                     evening_precipitation_type = 1
                 },
-                new Weather
+                new Measure
                 {
                     date = 1739293623,
                     morning_temperature = 15,
@@ -49,7 +51,7 @@ namespace StorageService.Web.Controllers
                     evening_wind_direction = 5,
                     evening_precipitation_type = 5
                 },
-                new Weather
+                new Measure
                 {
                     date = 1739380023,
                     morning_temperature = 15,

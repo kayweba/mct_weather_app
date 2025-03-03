@@ -1,6 +1,6 @@
 namespace StorageService.Web.Models
 {
-    public class Weather
+    public class Measure
     {
         public ulong date { get; set; }
         public double? morning_temperature { get; set; }
