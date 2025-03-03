@@ -6,6 +6,7 @@ namespace StorageService.Web
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -16,11 +17,11 @@ namespace StorageService.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddLogging(
-            builder =>
-            {
-                builder.AddFilter("default", LogLevel.None);
-            });
+            //services.AddLogging(
+            //builder =>
+            //{
+            //    builder.AddFilter("default", LogLevel.None);
+            //});
         }
 
         // Метод используется для перенаправления HTTP запросов в контроллер
