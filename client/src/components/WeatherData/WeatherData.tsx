@@ -1,12 +1,16 @@
+import { useEffect, useState } from 'react';
+
+import { WeatherMeasurementOfDay } from 'models/Measurement';
 import { PrecipitationIcon } from './PrecipitationIcon';
 import { WindDirectionIcon } from './WindDirectionIcon';
-import { Icons } from '../Icons';
-import { mockWeatherMeasurementOfDays } from '../../mocks/WeatherMeasurementOfDays';
-import { getReadableDateFromTimestamp } from '../../utils/getReadableDate';
 import cls from './WeatherData.module.css';
-import { useEffect } from 'react';
+import { Icons } from '../Icons';
+import { API_BASE_URL } from '../../constants/constants';
+import { getReadableDateFromTimestamp } from '../../utils/getReadableDate';
 
 export function WeatherData() {
+  const [weatherData, setWeatherData] = useState<WeatherMeasurementOfDay[]>([])
+
   const getAverageTemperature = (
     temperatures: Array<number | null>
   ): number | null => {
@@ -20,17 +24,17 @@ export function WeatherData() {
 
   useEffect(() => {
 
-    // const makeRequest = async () => {
-    //   const response = await fetch('http://127.0.0.1:5117/weather', {
-    //     mode: 'no-cors',
-    //     method: "GET",
-    //     headers: {
-    //       'Content-Type': 'application/json;'
-    //     }
-    //   })
-    //   console.log(response)
-    // }
-    // makeRequest()
+    const makeRequest = async () => {
+      const response = await fetch(`${API_BASE_URL}/weather`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json;'
+        }
+      })
+      const jsonData = await response.json()
+      setWeatherData(jsonData)
+    }
+    makeRequest()
   }, [])
 
   // TODO: Добавить проверку на null, чтобы не выводить лишние символы.
@@ -47,7 +51,7 @@ export function WeatherData() {
           </tr>
         </thead>
         <tbody>
-          {mockWeatherMeasurementOfDays.map((day, index) => {
+          {weatherData.map((day, index) => {
             return (
               <tr key={index}>
                 <td>{getReadableDateFromTimestamp(day.date)}</td>
