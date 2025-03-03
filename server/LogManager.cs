@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace StorageService
+﻿namespace StorageService
 {
     internal class LogManager
     {

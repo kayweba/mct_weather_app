@@ -1,9 +1,5 @@
 ﻿using StorageService;
-using System.ComponentModel.Design;
-using System.Dynamic;
 using System.Net;
-using System.Reflection;
-
 namespace StorageService
 {
     public class DbConfiguration
@@ -71,13 +67,16 @@ public class ConnConfiguration
         try
         {
             host = IPAddress.Parse(_host);
+            if (string.IsNullOrEmpty(host.ToString()) || _port <= 0)
+                throw new ConfigurationException("Адрес или порт хоста указаны неправильно. Адрес должен быть не пустым, " +
+                    "порт должен быть больше либо равен 0.",
+                    (int)ConfigurationErrorCode.invalidValue);
         }
         catch (FormatException)
         {
             throw new ConfigurationException("Не удается преобразовать адрес хоста. Неверный формат",
                 (int)ConfigurationErrorCode.typecastError);
         }
-        //TODO: parse error?
         port = _port;
     }
     public IPAddress Host
@@ -89,7 +88,7 @@ public class ConnConfiguration
         get => port;
     }
     private IPAddress host = IPAddress.Loopback;
-    private int port = -1;
+    private int port = 80;
 }
 
 public class LogConfiguration
