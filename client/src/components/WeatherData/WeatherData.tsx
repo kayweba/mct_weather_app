@@ -4,6 +4,7 @@ import { Icons } from '../Icons';
 import { mockWeatherMeasurementOfDays } from '../../mocks/WeatherMeasurementOfDays';
 import { getReadableDateFromTimestamp } from '../../utils/getReadableDate';
 import cls from './WeatherData.module.css';
+import { useEffect } from 'react';
 
 export function WeatherData() {
   const getAverageTemperature = (
@@ -16,6 +17,21 @@ export function WeatherData() {
     if (onlyExistsTemp.length > 0) return sumNum / onlyExistsTemp.length;
     return null;
   };
+
+  useEffect(() => {
+
+    // const makeRequest = async () => {
+    //   const response = await fetch('http://127.0.0.1:5117/weather', {
+    //     mode: 'no-cors',
+    //     method: "GET",
+    //     headers: {
+    //       'Content-Type': 'application/json;'
+    //     }
+    //   })
+    //   console.log(response)
+    // }
+    // makeRequest()
+  }, [])
 
   // TODO: Добавить проверку на null, чтобы не выводить лишние символы.
   return (

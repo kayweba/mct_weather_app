@@ -43,3 +43,6 @@ html {
 *::-webkit-scrollbar-thumb:active {
   background-color: #5F6062;
 }
+
+/* Плавный скролл */
+html { scroll-behavior: smooth; }
