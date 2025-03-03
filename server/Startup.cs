@@ -27,7 +27,14 @@ namespace StorageService.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseRouting();
-            app.UseCors();
+            app.UseCors(
+                policy =>
+                {
+                    policy.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin();
+                }
+            );
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
