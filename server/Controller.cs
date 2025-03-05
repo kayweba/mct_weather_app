@@ -8,7 +8,7 @@ namespace StorageService
             configuration = new ConfigManager();
             if (configuration.Logger is not null)
                 LogManager.Configuration = configuration.Logger;
-            webServer = new WebManager(configuration.Connection);
+            webServer = new WebManager(configuration.Connection, configuration.Database);
         }
         public void Start()
         {

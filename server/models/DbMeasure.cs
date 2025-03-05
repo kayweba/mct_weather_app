@@ -1,25 +1,24 @@
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StorageService.Database
 {
+    [PrimaryKey(nameof(Measure_date), nameof(Measure_day_part))]
     public class DbMeasure
     {
-        [Key]
-        public long Measure_date { get; set; }
-        public double? Morning_temperature { get; set; }
-        public double? Morning_pressure { get; set; }
-        public double? Morning_wind_speed { get; set; }
-        public DbWindDirection? Morning_wind_direction { get; set; }
-        public DbPrecipitationType? Morning_precipitation_type { get; set; }
-        public double? Afternoon_temperature { get; set; }
-        public double? Afternoon_pressure { get; set; }
-        public double? Afternoon_wind_speed { get; set; }
-        public DbWindDirection? Afternoon_wind_direction { get; set; }
-        public DbPrecipitationType? Afternoon_precipitation_type { get; set; }
-        public double? Evening_temperature { get; set; }
-        public double? Evening_pressure { get; set; }
-        public double? Evening_wind_speed { get; set; }
-        public DbWindDirection? Evening_wind_direction { get; set; }
-        public DbPrecipitationType? Evening_precipitation_type { get; set; }
+        public ulong Measure_date { get; set; }
+        public int Measure_day_part { get; set; }
+        [ForeignKey("Measure_day_part")]
+        public required DbDayPart Day_part { get; set; }
+        public double? Temperature { get; set; }
+        public double? Pressure { get; set; }
+        public double? Wind_speed { get; set; }
+        public int Wind_directionId { get; set; }
+        [ForeignKey("Wind_directionId")]
+        public DbWindDirection? Wind { get; set; }
+        public int Precipitation_typeId { get; set; }
+        [ForeignKey("Precipitation_typeId")]
+        public DbPrecipitationType? Precipitation { get; set; }
     }
 }
