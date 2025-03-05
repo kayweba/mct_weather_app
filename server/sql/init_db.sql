@@ -41,7 +41,7 @@ VALUES
 	
 CREATE TABLE measures (
 	Measure_date INTEGER NOT NULL,
-	Measure_day_part INTEGER NOT NULL,
+	Measure_day_partId INTEGER NOT NULL,
 	Temperature REAL DEFAULT NULL,
 	Pressure REAL DEFAULT NULL,
 	Wind_speed REAL DEFAULT NULL,

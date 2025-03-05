@@ -22,7 +22,7 @@ namespace StorageService
             user = _user;
             password = _password;
             _dbmsName = _dbmsName.ToLower();
-            if (string.IsNullOrEmpty(_dbmsName))
+            if (!string.IsNullOrEmpty(_dbmsName))
             {
                 switch (_dbmsName)
                 {

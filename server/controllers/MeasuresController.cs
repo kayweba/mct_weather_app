@@ -1,5 +1,6 @@
 using StorageService.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using StorageService.Database;
 
 namespace StorageService.Web.Controllers
 {
@@ -7,10 +8,15 @@ namespace StorageService.Web.Controllers
     [Route("[controller]")]
     public class MeasuresController : Microsoft.AspNetCore.Mvc.Controller
     {
+        public MeasuresController(MeasureContext context)
+        {
+            db = context;
+        }
         [HttpGet]
         public List<Measure> Get()
         {
-            // TODO db to list Async
+            List<DbMeasure> measures = db.measures.ToList();
+            //TODO получить все измерения с одинаковыми датами и заполнить возвращаемое значение
             return new List<Measure>
             {
                 new Measure
@@ -72,5 +78,6 @@ namespace StorageService.Web.Controllers
                 }
             };
         }
+        private MeasureContext db;
     }
 }
