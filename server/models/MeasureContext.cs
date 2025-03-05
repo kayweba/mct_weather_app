@@ -10,8 +10,6 @@ namespace StorageService.Database
         public DbSet<DbDayPart> dayParts { get; set; }
         public MeasureContext(DbContextOptions<MeasureContext> options) : base(options)
         {
-            dbFileName = "weatherdb";
-            configuration = _configuration;
             Database.EnsureCreated();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
