@@ -1,20 +1,20 @@
 using StorageService.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using StorageService.Database;
-using System.Data.Common;
-using System.Linq;
+using System.Web.Http;
+using System.Net;
 
 namespace StorageService.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Microsoft.AspNetCore.Mvc.Route("[controller]")]
     public class MeasuresController : Microsoft.AspNetCore.Mvc.Controller
     {
         public MeasuresController(MeasureContext context)
         {
             db = context;
         }
-        [HttpGet]
+        [Microsoft.AspNetCore.Mvc.HttpGet]
         public List<Measure> Get()
         {
             List<Measure> ret = new List<Measure>();
@@ -62,6 +62,49 @@ namespace StorageService.Web.Controllers
                 ret.Add(retValue);
             }
             return ret;
+        }
+        [Microsoft.AspNetCore.Mvc.HttpPost]
+        public PMeasure? Post(PMeasure value)
+        {
+            if (!PMeasure.Validate(value))
+                // Пришедший JSON некорректен, возвращаем ошибку
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.UnprocessableEntity)
+                {
+                    Content = new StringContent("Invalid data"),
+                    ReasonPhrase = "Exception"
+                });
+
+            DbDayPart? dbDayPart = db.dayParts.Find(value.part_of_day);
+            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddSeconds(value.date).ToLocalTime();
+            long unixTime = ((DateTimeOffset)dateTime.Date).ToUnixTimeSeconds();
+            // Ищем сначала в базе такую запись
+            DbMeasure? exists = db.measures.Find([unixTime, value.part_of_day]);
+            bool shouldBeOverwritten = true;
+            if (exists is not null)
+            {
+                shouldBeOverwritten = value.force_overwrite.GetValueOrDefault(false);
+            }
+            // Если такой записи нет или ее надо перезаписать
+            if (dbDayPart is not null && shouldBeOverwritten)
+            {
+                db.measures.Add(new DbMeasure
+                {
+                    Measure_date = (ulong)unixTime,
+                    Measure_day_part = value.part_of_day,
+                    Day_part = dbDayPart,
+                    Temperature = value.temperature,
+                    Pressure = value.pressure,
+                    Wind_speed = value.wind_speed,
+                    Wind_directionId = value.wind_direction,
+                    Precipitation_typeId = value.precipitation_type
+                });
+                int written = db.SaveChanges();
+                if (written != 0)
+                    return value;
+                else return null;
+            }
+            return null;
         }
         private MeasureContext db;
     }
