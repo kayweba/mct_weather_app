@@ -25,7 +25,8 @@ export function WeatherData() {
   useEffect(() => {
 
     const makeRequest = async () => {
-      const response = await fetch(`${API_BASE_URL}/weather`, {
+      // TODO: Вынести запросы в services
+      const response = await fetch(`${API_BASE_URL}/measures`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json;'

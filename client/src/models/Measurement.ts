@@ -32,27 +32,27 @@ export type WeatherMeasurementOfDay = {
 
 
 export enum PartOfDay {
-  MORNING = 0,
-  AFTERNOON = 1,
-  EVENING = 2
+  MORNING = 1,
+  AFTERNOON = 2,
+  EVENING = 3
 }
 
 export enum PrecipitationType {
-  CLOUD = 0,
-  SUN = 1,
-  RAIN = 2,
-  SNOW = 3,
-  SNOW_WITH_RAIN = 4,
-  PARTLY_CLOUDY = 5,
+  CLOUD = 1,
+  SUN = 2,
+  RAIN = 3,
+  SNOW = 4,
+  SNOW_WITH_RAIN = 5,
+  PARTLY_CLOUDY = 6,
 }
 
 export enum WindDirection {
-  SOUTH = 0,
-  NORTHERN = 1,
-  WESTERN = 2,
-  EASTERN = 3,
-  SOUTHWEST = 4,
-  SOUTHEAST = 5,
-  NORTHWEST = 6,
-  NORTHEAST = 7,
+  SOUTH = 1,
+  NORTHERN = 2,
+  WESTERN = 3,
+  EASTERN = 4,
+  SOUTHWEST = 5,
+  SOUTHEAST = 6,
+  NORTHWEST = 7,
+  NORTHEAST = 8,
 }
