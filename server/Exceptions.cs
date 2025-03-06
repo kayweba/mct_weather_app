@@ -23,4 +23,8 @@
     {
         public LogException(string _message, int code) : base(_message, code) { }
     }
+    class DatabaseException : BasicException
+    {
+        public DatabaseException(string _message, int _code) : base(_message, _code) {}
+    }
 }
