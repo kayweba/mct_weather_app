@@ -2,10 +2,6 @@
 bin/*
 obj/*
 Properties/*
-<<<<<<< HEAD
 *.db
 *.db-shm
 *.db-wal
-=======
-*.db
->>>>>>> 92614d8f8a9afdcd58a2dc30325ece2e693c9f41
