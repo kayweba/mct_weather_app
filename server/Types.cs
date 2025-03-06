@@ -183,3 +183,7 @@ public enum LogErrorCode
     ioFailed,
     ioForbidden
 }
+public enum DbErrorCode
+{
+    incorrectValue
+}
