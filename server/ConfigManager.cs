@@ -29,6 +29,7 @@ namespace StorageService
                 if (dbElem is not null)
                 {
                     string host = "", user = "", password = "", dbms = "";
+                    int port = 0;
                     XmlAttributeCollection? dbAttrs = dbElem.Attributes;
                     if (dbAttrs is not null)
                     {
@@ -36,17 +37,30 @@ namespace StorageService
                         if (attr is not null) host = attr.Value;
                         else throw new ConfigurationException("Отсутствует обязательный атрибут \"host\" в элементе \"database\".",
                             (int) ConfigurationErrorCode.invalidAttribute);
-                            attr = dbAttrs["user"];
+                        attr = dbAttrs["user"];
                         if (attr is not null) user = attr.Value;
                         else throw new ConfigurationException("Отсутствует обязательный атрибут \"user\" в элементе \"database\".",
                             (int)ConfigurationErrorCode.invalidAttribute);
+                        attr = dbAttrs["port"];
+                        if (attr is not null)
+                        {
+                            try
+                            {
+                                port = Int32.Parse(attr.Value);
+                            }
+                            catch (FormatException)
+                            {
+                                throw new ConfigurationException("Не удается преобразовать значение атрибута \"port\" в элементе \"database\". Неверный формат.",
+                                    (int)ConfigurationErrorCode.typecastError);
+                            }
+                        }
                         attr = dbAttrs["password"];
                         if (attr is not null) password = attr.Value;
                         else throw new ConfigurationException("Отсутствует обязательный атрибут \"password\" в элементе \"database\".",
                             (int)ConfigurationErrorCode.invalidAttribute);
                         attr = dbAttrs["dbms"];
                         if (attr is not null) dbms = attr.Value;
-                        dbConfig = new DbConfiguration(host, user, password, dbms);
+                        dbConfig = new DbConfiguration(host, user, port, password, dbms);
                     }
                 }
                 #endregion

@@ -2,3 +2,6 @@
 bin/*
 obj/*
 Properties/*
+*.db
+*.db-shm
+*.db-wal
