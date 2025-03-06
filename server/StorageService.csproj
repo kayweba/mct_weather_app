@@ -5,7 +5,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+<<<<<<< HEAD
     <Version>1.0.1.9</Version>
+=======
+    <Version>1.0.1.8</Version>
+>>>>>>> 92614d8f8a9afdcd58a2dc30325ece2e693c9f41
   </PropertyGroup>
 
   <ItemGroup>

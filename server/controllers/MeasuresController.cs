@@ -1,8 +1,13 @@
 using StorageService.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using StorageService.Database;
+<<<<<<< HEAD
 using System.Web.Http;
 using System.Net;
+=======
+using System.Data.Common;
+using System.Linq;
+>>>>>>> 92614d8f8a9afdcd58a2dc30325ece2e693c9f41
 
 namespace StorageService.Web.Controllers
 {
@@ -14,7 +19,11 @@ namespace StorageService.Web.Controllers
         {
             db = context;
         }
+<<<<<<< HEAD
         [Microsoft.AspNetCore.Mvc.HttpGet]
+=======
+        [HttpGet]
+>>>>>>> 92614d8f8a9afdcd58a2dc30325ece2e693c9f41
         public List<Measure> Get()
         {
             List<Measure> ret = new List<Measure>();
@@ -63,6 +72,7 @@ namespace StorageService.Web.Controllers
             }
             return ret;
         }
+<<<<<<< HEAD
         [Microsoft.AspNetCore.Mvc.HttpPost]
         public PMeasure? Post(PMeasure value)
         {
@@ -106,6 +116,8 @@ namespace StorageService.Web.Controllers
             }
             return null;
         }
+=======
+>>>>>>> 92614d8f8a9afdcd58a2dc30325ece2e693c9f41
         private MeasureContext db;
     }
 }

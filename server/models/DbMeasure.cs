@@ -14,10 +14,17 @@ namespace StorageService.Database
         public double? Temperature { get; set; }
         public double? Pressure { get; set; }
         public double? Wind_speed { get; set; }
+<<<<<<< HEAD
         public int? Wind_directionId { get; set; }
         [ForeignKey("Wind_directionId")]
         public DbWindDirection? Wind { get; set; }
         public int? Precipitation_typeId { get; set; }
+=======
+        public int Wind_directionId { get; set; }
+        [ForeignKey("Wind_directionId")]
+        public DbWindDirection? Wind { get; set; }
+        public int Precipitation_typeId { get; set; }
+>>>>>>> 92614d8f8a9afdcd58a2dc30325ece2e693c9f41
         [ForeignKey("Precipitation_typeId")]
         public DbPrecipitationType? Precipitation { get; set; }
     }
