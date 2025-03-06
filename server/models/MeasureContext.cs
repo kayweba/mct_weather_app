@@ -10,6 +10,8 @@ namespace StorageService.Database
         public DbSet<DbDayPart> dayParts { get; set; }
         public MeasureContext(DbContextOptions<MeasureContext> options) : base(options)
         {
+            dbFileName = "weatherdb";
+            configuration = _configuration;
             Database.EnsureCreated();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,5 +40,7 @@ namespace StorageService.Database
                 new DbPrecipitationType { Id = 6, Description = "Облачно с прояснениями" }
             );
         }
+        private DbConfiguration? configuration;
+        private string dbFileName;
     }
 }

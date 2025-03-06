@@ -82,12 +82,12 @@ namespace StorageService.Web.Controllers
             DbMeasure? exists = db.measures.Find([unixTime, value.part_of_day]);
             bool shouldBeOverwritten = true;
             if (exists is not null)
-            {
+                {
                 shouldBeOverwritten = value.force_overwrite.GetValueOrDefault(false);
             }
             // ≈сли такой записи нет или ее надо перезаписать
             if (dbDayPart is not null && shouldBeOverwritten)
-            {
+                {
                 db.measures.Add(new DbMeasure
                 {
                     Measure_date = (ulong)unixTime,
@@ -103,7 +103,7 @@ namespace StorageService.Web.Controllers
                 if (written != 0)
                     return value;
                 else return null;
-            }
+                }
             return null;
         }
         private MeasureContext db;
