@@ -37,22 +37,22 @@ namespace StorageService.Web.Controllers
                             retValue.morning_temperature = measure.Temperature;
                             retValue.morning_pressure = measure.Pressure;
                             retValue.morning_wind_speed = measure.Wind_speed;
-                            retValue.morning_precipitation_type = (uint) measure.Precipitation_typeId;
-                            retValue.morning_wind_direction = (uint) measure.Wind_directionId;
+                            retValue.morning_precipitation_type = (uint?) measure.Precipitation_typeId;
+                            retValue.morning_wind_direction = (uint?) measure.Wind_directionId;
                             break;
                         case 2:
                             retValue.afternoon_temperature = measure.Temperature;
                             retValue.afternoon_pressure = measure.Pressure;
                             retValue.afternoon_wind_speed = measure.Wind_speed;
-                            retValue.afternoon_precipitation_type = (uint) measure.Precipitation_typeId;
-                            retValue.afternoon_wind_direction = (uint) measure.Wind_directionId;
+                            retValue.afternoon_precipitation_type = (uint?) measure.Precipitation_typeId;
+                            retValue.afternoon_wind_direction = (uint?) measure.Wind_directionId;
                             break;
                         case 3:
                             retValue.evening_temperature = measure.Temperature;
                             retValue.evening_pressure = measure.Pressure;
                             retValue.evening_wind_speed = measure.Wind_speed;
-                            retValue.evening_precipitation_type = (uint)measure.Precipitation_typeId;
-                            retValue.evening_wind_direction = (uint)measure.Wind_directionId;
+                            retValue.evening_precipitation_type = (uint?)measure.Precipitation_typeId;
+                            retValue.evening_wind_direction = (uint?)measure.Wind_directionId;
                             break;
                         default:
                             throw new DatabaseException("Не удается преобразовать полученное из БД измерение." +
@@ -63,7 +63,7 @@ namespace StorageService.Web.Controllers
             }
             return ret;
         }
-        [Microsoft.AspNetCore.Mvc.HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPut]
         public PMeasure? Post(PMeasure value)
         {
             if (!PMeasure.Validate(value))
