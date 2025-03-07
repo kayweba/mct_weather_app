@@ -2,9 +2,7 @@ using StorageService.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using StorageService.Database;
 using System.Web.Http;
-using System.Net;
-using Newtonsoft.Json;
-using System.Web.Http.Results;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace StorageService.Web.Controllers
 {
@@ -86,7 +84,7 @@ namespace StorageService.Web.Controllers
                 DbDayPart? dbDayPart = db.dayParts.Find(value.part_of_day);
                 DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                 dateTime = dateTime.AddSeconds(value.date).ToLocalTime();
-                long unixTime = ((DateTimeOffset)dateTime.Date).ToUnixTimeSeconds();
+                ulong unixTime = (ulong) ((DateTimeOffset)dateTime.Date).ToUnixTimeSeconds();
                 // Ищем сначала в базе такую запись
                 DbMeasure? exists = db.measures.Find([unixTime, value.part_of_day]);
                 bool shouldBeOverwritten = true;

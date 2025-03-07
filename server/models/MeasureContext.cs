@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 namespace StorageService.Database
 {
     public class MeasureContext : DbContext 
@@ -38,7 +37,5 @@ namespace StorageService.Database
                 new DbPrecipitationType { Id = 6, Description = "Облачно с прояснениями" }
             );
         }
-        private DbConfiguration? configuration;
-        private string dbFileName;
     }
 }

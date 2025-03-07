@@ -2,6 +2,8 @@
 bin/*
 obj/*
 Properties/*
+StorageService.Tests/bin/*
+StorageService.Tests/obj/*
 *.db
 *.db-shm
 *.db-wal
