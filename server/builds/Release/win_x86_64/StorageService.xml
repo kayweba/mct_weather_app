@@ -8,7 +8,7 @@
     4) password - пароль пользователя БД
     5) dbms (опционально) - СУБД. По умолчанию SQLite
   -->
-	<database host="127.0.0.1" port="5433" user="postgres" password="root" dbms="pgsql" />
+	<database host="127.0.0.1" port="5433" user="postgres" password="root" dbms="sqlite" />
   <!--
     Параметры:
     1) host - адрес интерфейса для этого сервиса. По умолчанию 127.0.0.1

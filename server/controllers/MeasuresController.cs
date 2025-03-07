@@ -1,8 +1,6 @@
 using StorageService.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using StorageService.Database;
-using System.Web.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace StorageService.Web.Controllers
@@ -93,21 +91,32 @@ namespace StorageService.Web.Controllers
                 {
                     shouldBeOverwritten = value.force_overwrite.GetValueOrDefault(false);
                 }
-                // Если такой записи нет или ее надо перезаписать
+                //Если такой записи нет или ее надо перезаписать
                 if (dbDayPart is not null && shouldBeOverwritten)
                 {
-                    db.measures.Add(new DbMeasure
+                    if (exists is null)
                     {
-                        Measure_date = (ulong)unixTime,
-                        Measure_day_part = value.part_of_day,
-                        Day_part = dbDayPart,
-                        Temperature = value.temperature,
-                        Pressure = value.pressure,
-                        Wind_speed = value.wind_speed,
-                        Wind_directionId = value.wind_direction,
-                        Precipitation_typeId = value.precipitation_type
-                    });
-                    int written = await db.SaveChangesAsync();
+                        db.measures.Add(new DbMeasure
+                        {
+                            Measure_date = (ulong)unixTime,
+                            Measure_day_part = value.part_of_day,
+                            Day_part = dbDayPart,
+                            Temperature = value.temperature,
+                            Pressure = value.pressure,
+                            Wind_speed = value.wind_speed,
+                            Wind_directionId = value.wind_direction,
+                            Precipitation_typeId = value.precipitation_type
+                        });
+                    }
+                    else 
+                    {
+                        exists.Temperature = value.temperature;
+                        exists.Pressure = value.pressure;
+                        exists.Wind_speed = value.wind_speed;
+                        exists.Wind_directionId = value.wind_direction;
+                        exists.Precipitation_typeId = value.precipitation_type;
+                    }
+                        int written = await db.SaveChangesAsync();
                     if (written != 0)
                         return Ok(value);
                     else return Ok(null);
@@ -122,6 +131,6 @@ namespace StorageService.Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        private MeasureContext db;
+        private readonly MeasureContext db;
     }
 }

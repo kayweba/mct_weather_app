@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Hosting.Server.Features;
-using StorageService.Database;
 
 namespace StorageService.Web
 {
@@ -30,15 +29,23 @@ namespace StorageService.Web
             }
 
             LogManager.Instance().Log($"dbms = {dbms}, connection_string = {dbConnectionString}", MType.Information, MSeverity.Other);
-            
+
+            var config = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .AddInMemoryCollection(
+                [
+                    new KeyValuePair<string, string?>("dbms", dbms.ToString()),
+                    new KeyValuePair<string, string?>("connection_string", dbConnectionString)
+                ])
+                .Build();
+
             host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
-                .UseSetting("dbms", dbms.ToString())
-                .UseSetting("connection_string", dbConnectionString)
                 .UseUrls($"http://{hostAddress}:{hostPort}/")
+                .UseConfiguration(config)
                 .ConfigureLogging(logging =>
                 {
                     logging.AddConsole();

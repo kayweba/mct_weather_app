@@ -1,16 +1,18 @@
-﻿namespace StorageService
+﻿using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
+
+namespace StorageService
 {
     class FileLogger : ILogger
     {
         public FileLogger()
         {
             fileName = System.Diagnostics.Process.GetCurrentProcess().ProcessName + "_" +
-                DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "_log.txt";
+            DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "_log.txt";
             filePath = fileName;
         }
         public void Trace(string message)
         {
-            // TODO handle IOException & UnauthorizedException
             TraceInternal(message);
         }
 

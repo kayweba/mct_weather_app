@@ -1,6 +1,6 @@
 ﻿namespace StorageService
 {
-    internal class LogManager
+    internal class LogManager 
     {
         public static LogConfiguration? Configuration
         {

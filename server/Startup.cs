@@ -1,28 +1,25 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using StorageService.Database;
 
 namespace StorageService.Web
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
-        }
+        private Microsoft.Extensions.Configuration.IConfigurationRoot Configuration { get; }
 
-        public IConfigurationRoot Configuration { get; }
+        public Startup(Microsoft.Extensions.Configuration.IConfiguration configuration)
+        {
+            Configuration = (IConfigurationRoot)configuration;
+        }
 
         // Метод используется для добавления сервисов в контейнер
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
             DBMS_Type dbms = DBMS_Type.UNDEFINED;
-            Enum.TryParse<DBMS_Type>(Configuration["dbms"], out dbms);
-            string? connection = Configuration["connection_string"];
+            Enum.TryParse(Configuration.GetSection("dbms").Get<string>(), out dbms);
+            string? connection = Configuration.GetSection("connection_string").Get<string>();
             LogManager.Instance().Log($"{{Startup.cs}} dbms = {dbms}, connection = {connection}", MType.Information);
             services.AddDbContext<MeasureContext>(options =>
             {
@@ -37,11 +34,12 @@ namespace StorageService.Web
                     options.UseSqlite($"FileName={connection}.db");
                 }
             });
-            //services.AddLogging(
-            //builder =>
-            //{
-            //    builder.AddFilter("default", LogLevel.None);
-            //});
+            services.AddLogging(
+            builder =>
+            {
+                builder.AddFilter("default", LogLevel.Error);
+                builder.SetMinimumLevel(LogLevel.Error);
+            });
         }
 
         // Метод используется для перенаправления HTTP запросов в контроллер

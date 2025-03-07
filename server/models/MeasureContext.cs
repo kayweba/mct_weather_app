@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Npgsql;
 namespace StorageService.Database
 {
     public class MeasureContext : DbContext 
@@ -9,7 +10,15 @@ namespace StorageService.Database
         public DbSet<DbDayPart> dayParts { get; set; }
         public MeasureContext(DbContextOptions<MeasureContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            try
+            {
+                Database.EnsureCreated();
+            }
+            catch (NpgsqlException ex)
+            {
+                LogManager.Instance().Log($"Не удалось соединится в БД. {ex.Message}", MType.Error, MSeverity.Critical);
+                Database.CloseConnection();
+            }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -4,7 +4,6 @@ namespace StorageService.Web
     {
         public static bool Validate(PMeasure value)
         {
-            //TODO когда время в UTC еще в предыдущем дне, то возникает ошибка сравнения
             long unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             return ((value.date > 0 && value.date <= unixTime) &&
                     (value.part_of_day > 0 && value.part_of_day <= 3));
