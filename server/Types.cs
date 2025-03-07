@@ -4,21 +4,26 @@ namespace StorageService
 {
     public class DbConfiguration
     {
-        public DbConfiguration(string _host, string _user, string _password, string _dbmsName)
+        public DbConfiguration(string _host, string _user, int _port, string _password, string _dbmsName)
         {
             try
             {
                 host = IPAddress.Parse(_host);
+                if (string.IsNullOrEmpty(host.ToString()) || _port <= 0)
+                    throw new ConfigurationException("Адрес или порт БД указаны неправильно. Адрес должен быть не пустым, " +
+                        "порт должен быть больше либо равен 0.",
+                        (int)ConfigurationErrorCode.invalidValue);
             }
             catch (FormatException)
             {
-                throw new ConfigurationException("Не удается преобразовать адрес хоста. Неверный формат",
+                throw new ConfigurationException("Не удается преобразовать адрес БД. Неверный формат",
                     (int)ConfigurationErrorCode.typecastError);
             }
             user = _user;
             password = _password;
             _dbmsName = _dbmsName.ToLower();
-            if (string.IsNullOrEmpty(_dbmsName))
+            port = _port;
+            if (!string.IsNullOrEmpty(_dbmsName))
             {
                 switch (_dbmsName)
                 {
@@ -45,6 +50,10 @@ namespace StorageService
         {
             get => user;
         }
+        public int Port
+        {
+            get => port;
+        }
         public string Password
         {
             get => password;
@@ -56,6 +65,7 @@ namespace StorageService
 
         private IPAddress host = IPAddress.Loopback;
         private string user = "";
+        private int port = 5433;
         private string password = "";
         private DBMS_Type dbms = DBMS_Type.UNDEFINED;
     }
@@ -173,4 +183,8 @@ public enum LogErrorCode
     dirNotFound,
     ioFailed,
     ioForbidden
+}
+public enum DbErrorCode
+{
+    incorrectValue
 }
