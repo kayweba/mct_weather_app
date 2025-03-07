@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import cls from './WeatherMeasurementForm.module.css';
 import { Button } from '../../UI/Button/Button';
-import { WeatherMeasurement } from 'models/Measurement';
+import { PartOfDay, PrecipitationType, WeatherMeasurement, WindDirection } from '../../../models/Measurement';
 import { API_BASE_URL } from '../../../constants/constants';
 
 export function WeatherMeasurementForm() {
   const [date, setDate] = useState<string>('');
-  const [partOfDay, setPartOfDay] = useState<string>('0');
-  const [precipitationType, setPrecipitationType] = useState<string>('0');
-  const [windDirection, setWindDirection] = useState<string>('0');
-  const [temperature, setTemperature] = useState<string>('0');
-  const [pressure, setPressure] = useState<string>('740');
-  const [windSpeed, setWindSpeed] = useState<string>('0');
+  const [partOfDay, setPartOfDay] = useState<PartOfDay>(PartOfDay.MORNING);
+  const [precipitationType, setPrecipitationType] = useState<PrecipitationType>(PrecipitationType.CLOUD);
+  const [windDirection, setWindDirection] = useState<WindDirection>(WindDirection.SOUTH);
+  const [temperature, setTemperature] = useState<number>(0);
+  const [pressure, setPressure] = useState<number>(740);
+  const [windSpeed, setWindSpeed] = useState<number>(0);
 
   // const [error, setError] = useState<string[]>([])
 
@@ -56,8 +56,12 @@ export function WeatherMeasurementForm() {
       return
     }
 
+    const getUTCTimestamp = () => {
+      return new Date(Date.parse(date)).getTime() / 1000
+    }
+
     const measurementData: WeatherMeasurement = {
-      date: Date.parse(date) / 1000,
+      date: getUTCTimestamp(),
       part_of_day: Number(partOfDay),
       precipitation_type: Number(precipitationType),
       temperature: Number(temperature),
@@ -99,11 +103,11 @@ export function WeatherMeasurementForm() {
             name="part_of_day"
             id="part_of_day"
             value={partOfDay}
-            onChange={(event) => setPartOfDay(event.currentTarget.value)}
+            onChange={(event) => setPartOfDay(Number(event.currentTarget.value))}
           >
-            <option value="1">Утро</option>
-            <option value="2">День</option>
-            <option value="3">Вечер</option>
+            <option value={PartOfDay.MORNING}>Утро</option>
+            <option value={PartOfDay.AFTERNOON}>День</option>
+            <option value={PartOfDay.EVENING}>Вечер</option>
           </select>
         </div>
         <div className={cls.selectWrapper}>
@@ -113,32 +117,32 @@ export function WeatherMeasurementForm() {
             id="precipitation_type"
             value={precipitationType}
             onChange={(event) =>
-              setPrecipitationType(event.currentTarget.value)
+              setPrecipitationType(Number(event.currentTarget.value))
             }
           >
-            <option value="1">Облачно</option>
-            <option value="2">Солнечно</option>
-            <option value="3">Дождь</option>
-            <option value="4">Снег</option>
-            <option value="5">Снег с дождем</option>
-            <option value="6">Облачно с прояснениями</option>
+            <option value={PrecipitationType.CLOUD}>Облачно</option>
+            <option value={PrecipitationType.SUN}>Солнечно</option>
+            <option value={PrecipitationType.RAIN}>Дождь</option>
+            <option value={PrecipitationType.SNOW}>Снег</option>
+            <option value={PrecipitationType.SNOW_WITH_RAIN}>Снег с дождем</option>
+            <option value={PrecipitationType.PARTLY_CLOUDY}>Облачно с прояснениями</option>
           </select>
         </div>
         <div className={cls.selectWrapper}>
           <label htmlFor="wind_direction">Направление ветра</label>
           <select
-            onChange={(event) => setWindDirection(event.currentTarget.value)}
+            onChange={(event) => setWindDirection(Number(event.currentTarget.value))}
             name="wind_direction"
             id="wind_direction"
           >
-            <option value="1">Южный</option>
-            <option value="2">Северный</option>
-            <option value="3">Западный</option>
-            <option value="4">Восточный</option>
-            <option value="5">Юго-западный</option>
-            <option value="6">Юго-восточный</option>
-            <option value="7">Северо-западный</option>
-            <option value="8">Северо-восточный</option>
+            <option value={WindDirection.SOUTH}>Южный</option>
+            <option value={WindDirection.NORTHERN}>Северный</option>
+            <option value={WindDirection.WESTERN}>Западный</option>
+            <option value={WindDirection.EASTERN}>Восточный</option>
+            <option value={WindDirection.SOUTHWEST}>Юго-западный</option>
+            <option value={WindDirection.SOUTHEAST}>Юго-восточный</option>
+            <option value={WindDirection.NORTHWEST}>Северо-западный</option>
+            <option value={WindDirection.NORTHEAST}>Северо-восточный</option>
           </select>
         </div>
         <div>
@@ -146,7 +150,7 @@ export function WeatherMeasurementForm() {
           <input
             type="number"
             value={temperature}
-            onChange={(event) => setTemperature(event.currentTarget.value)}
+            onChange={(event) => setTemperature(Number(event.currentTarget.value))}
           />
         </div>
         <div>
@@ -154,7 +158,7 @@ export function WeatherMeasurementForm() {
           <input
             type="number"
             value={pressure}
-            onChange={(event) => setPressure(event.currentTarget.value)}
+            onChange={(event) => setPressure(Number(event.currentTarget.value))}
           />
         </div>
         <div>
@@ -162,7 +166,7 @@ export function WeatherMeasurementForm() {
           <input
             type="number"
             value={windSpeed}
-            onChange={(event) => setWindSpeed(event.currentTarget.value)}
+            onChange={(event) => setWindSpeed(Number(event.currentTarget.value))}
           />
         </div>
         <div>

@@ -25,15 +25,20 @@ export function WeatherData() {
   useEffect(() => {
 
     const makeRequest = async () => {
-      // TODO: Вынести запросы в services
-      const response = await fetch(`${API_BASE_URL}/measures`, {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json;'
-        }
-      })
-      const jsonData = await response.json()
-      setWeatherData(jsonData)
+      try {
+        
+        // TODO: Вынести запросы в services
+        const response = await fetch(`${API_BASE_URL}/measures`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json;'
+          }
+        })
+        const jsonData = await response.json()
+        setWeatherData(jsonData)
+      } catch (error) {
+        alert(error)
+      }
     }
     makeRequest()
   }, [])
