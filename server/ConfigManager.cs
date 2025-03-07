@@ -2,24 +2,78 @@
 
 namespace StorageService
 {
-    internal class ConfigManager : IConfiguration
+    public class ConfigManager : IConfiguration
     {
-        public ConfigManager()
+        public ConfigManager(string? configuration = null)
         {
-            ReadConfiguration();
+            if (string.IsNullOrEmpty(configuration))
+                ReadConfiguration();
+            else
+                ReadConfiguration(configuration);
         }
 
         private void ReadConfiguration()
         {
             configFileName = System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".xml";
+            try
+            {
+                string configuration = File.ReadAllText(configFileName);
+                XmlDocument doc = ParseConfiguration(configuration);
+                ReadConfigurationInternal(doc);
+            }
+            catch (FileNotFoundException)
+            {
+                LogManager.Instance().Log($"Не удалось найти файл конфигурации '{configFileName}'.", MType.Error, MSeverity.Important);
+                return;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                LogManager.Instance().Log($"Не удалось получить доступ к файлу конфигурации '{configFileName}'.", MType.Error, MSeverity.Important);
+                return;
+            }
+            catch (PathTooLongException)
+            {
+                LogManager.Instance().Log($"Имя файла конфигурации '{configFileName}' слишком длинное.", MType.Error, MSeverity.Important);
+                return;
+            }
+            catch (Exception)
+            {
+                LogManager.Instance().Log($"Не удалось прочитать файл конфигурации '{configFileName}'.", MType.Error, MSeverity.Important);
+                return;
+            }
+        }
+        private void ReadConfiguration(string configuration)
+        {
+            
+            XmlDocument doc = ParseConfiguration(configuration);
+            ReadConfigurationInternal(doc);
+        }
+        private XmlDocument ParseConfiguration(string configuration)
+        {
             XmlDocument doc = new XmlDocument();
             try
             {
-                doc.Load(configFileName);
+                doc.LoadXml(configuration);
+            }
+            catch (XmlException ex)
+            {
+                LogManager.Instance().Log($"Не удается прочитать конфигурацю. {ex.Message}", MType.Error, MSeverity.Important);
+            }
+            return doc;
+        }
+        private void ReadConfigurationInternal(XmlDocument? doc)
+        {
+            if (doc is null)
+            {
+                LogManager.Instance().Log($"Отсутствует конфигурация. ", MType.Error, MSeverity.Important);
+                return;
+            }
+            try
+            {
                 XmlElement? root = doc.DocumentElement;
                 if (root is null) throw new ConfigurationException("Отсутствует корневой элемент конфигурации.",
                     (int)ConfigurationErrorCode.invalidRoot);
-#region 'database'
+                #region 'database'
                 XmlNodeList dbElemList = root.GetElementsByTagName("database");
                 if (dbElemList.Count == 0) throw new ConfigurationException("Отсутствует элемент конфигурации \"database\".",
                     (int)ConfigurationErrorCode.invalidChild);
@@ -36,7 +90,7 @@ namespace StorageService
                         XmlAttribute? attr = dbAttrs["host"];
                         if (attr is not null) host = attr.Value;
                         else throw new ConfigurationException("Отсутствует обязательный атрибут \"host\" в элементе \"database\".",
-                            (int) ConfigurationErrorCode.invalidAttribute);
+                            (int)ConfigurationErrorCode.invalidAttribute);
                         attr = dbAttrs["user"];
                         if (attr is not null) user = attr.Value;
                         else throw new ConfigurationException("Отсутствует обязательный атрибут \"user\" в элементе \"database\".",
@@ -64,7 +118,7 @@ namespace StorageService
                     }
                 }
                 #endregion
-#region 'connection'
+                #region 'connection'
                 XmlNodeList connElemList = root.GetElementsByTagName("connection");
                 if (connElemList.Count == 0) throw new ConfigurationException("Отсутствует элемент конфигурации \"connection\".",
                     (int)ConfigurationErrorCode.invalidChild);
@@ -94,14 +148,14 @@ namespace StorageService
                                 throw new ConfigurationException("Не удается преобразовать значение атрибута \"port\" в элементе \"connection\". Неверный формат.",
                                     (int)ConfigurationErrorCode.typecastError);
                             }
-                        } 
+                        }
                         else throw new ConfigurationException("Отсутствует обязательный атрибут \"port\" в элементе \"connection\".",
                             (int)ConfigurationErrorCode.invalidAttribute);
                         conConfig = new ConnConfiguration(host, port);
                     }
                 }
-#endregion
-#region 'logger'
+                #endregion
+                #region 'logger'
                 XmlNodeList loggerElemList = root.GetElementsByTagName("logger");
                 if (loggerElemList.Count == 0) throw new ConfigurationException("Отсутствует элемент конфигурации \"logger\".",
                     (int)ConfigurationErrorCode.invalidChild);
@@ -143,13 +197,9 @@ namespace StorageService
                         logConfig = new LogConfiguration(level, path, destination);
                     }
                 }
-#endregion
+                #endregion
             }
             // Пока логгера еще нет
-            catch (FileNotFoundException)
-            {
-                LogManager.Instance().Log($"Не удалось найти файл конфигурации '{configFileName}'.", MType.Error, MSeverity.Important);
-            }
             catch (XmlException ex)
             {
                 LogManager.Instance().Log($"Ошибка парсинга конфигурации. {ex.Message}", MType.Error, MSeverity.Important);
@@ -158,7 +208,6 @@ namespace StorageService
             {
                 LogManager.Instance().Log($"Ошибка конфигурации. {ex.Message}", MType.Error, MSeverity.Important);
             }
-
         }
 
         public DbConfiguration? Database 

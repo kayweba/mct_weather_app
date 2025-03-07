@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StorageService.Database;
 using System.Web.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace StorageService.Web.Controllers
 {
@@ -15,12 +16,12 @@ namespace StorageService.Web.Controllers
             db = context;
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        public ActionResult<List<Measure>> Get()
+        public async Task<ActionResult<List<Measure>>> Get()
         {
             try
             {
                 List<Measure> ret = new List<Measure>();
-                List<DbMeasure> measures = db.measures.ToList();
+                List<DbMeasure> measures = await db.measures.ToListAsync();
                 Dictionary<ulong, List<DbMeasure>> unitedMeasures = new Dictionary<ulong, List<DbMeasure>>();
                 foreach (DbMeasure measure in measures)
                 {
@@ -74,19 +75,19 @@ namespace StorageService.Web.Controllers
             }
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
-        public ActionResult<PMeasure?> Post(PMeasure value)
+        public async Task<ActionResult<PMeasure?>> Post(PMeasure value)
         {
             try
             {
                 if (!PMeasure.Validate(value))
                     // Пришедший JSON некорректен, возвращаем ошибку
                     return UnprocessableEntity(new JsonResult("Invalid value"));
-                DbDayPart? dbDayPart = db.dayParts.Find(value.part_of_day);
+                DbDayPart? dbDayPart = await db.dayParts.FindAsync(value.part_of_day);
                 DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
                 dateTime = dateTime.AddSeconds(value.date).ToLocalTime();
                 ulong unixTime = (ulong) ((DateTimeOffset)dateTime.Date).ToUnixTimeSeconds();
                 // Ищем сначала в базе такую запись
-                DbMeasure? exists = db.measures.Find([unixTime, value.part_of_day]);
+                DbMeasure? exists = await db.measures.FindAsync([unixTime, value.part_of_day]);
                 bool shouldBeOverwritten = true;
                 if (exists is not null)
                 {
@@ -106,7 +107,7 @@ namespace StorageService.Web.Controllers
                         Wind_directionId = value.wind_direction,
                         Precipitation_typeId = value.precipitation_type
                     });
-                    int written = db.SaveChanges();
+                    int written = await db.SaveChangesAsync();
                     if (written != 0)
                         return Ok(value);
                     else return Ok(null);

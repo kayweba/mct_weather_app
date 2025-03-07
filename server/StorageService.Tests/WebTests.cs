@@ -11,19 +11,19 @@ namespace StorageService.Tests
     {
         private static string connectionStr = "FileName=werather.db";
         [Fact]
-        public void GetRequestCorrect()
+        public async void GetRequestCorrect()
         {
             DbContextOptionsBuilder<MeasureContext> builder = new DbContextOptionsBuilder<MeasureContext>();
             builder.UseSqlite(connectionStr);
             using (MeasureContext db = new MeasureContext(builder.Options))
             {
                 MeasuresController controller = new MeasuresController(db);
-                ActionResult<List<Measure>> measuresResult = controller.Get();
+                ActionResult<List<Measure>> measuresResult = await controller.Get();
                 Assert.NotNull(measuresResult.Value);
             }
         }
         [Fact]
-        public void PostRequestCorrect()
+        public async void PostRequestCorrect()
         {
             DbContextOptionsBuilder<MeasureContext> builder = new DbContextOptionsBuilder<MeasureContext>();
             builder.UseSqlite(connectionStr);
@@ -41,7 +41,7 @@ namespace StorageService.Tests
                     precipitation_type = 1,
                     force_overwrite = false
                 };
-                ActionResult<PMeasure?> ret = controller.Post(postedMeasure);
+                ActionResult<PMeasure?> ret = await controller.Post(postedMeasure);
                 Assert.NotNull(ret.Value);
             }
         }
