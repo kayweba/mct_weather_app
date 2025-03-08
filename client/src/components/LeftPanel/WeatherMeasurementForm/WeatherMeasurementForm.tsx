@@ -2,9 +2,13 @@ import { useState } from 'react';
 import cls from './WeatherMeasurementForm.module.css';
 import { Button } from '../../UI/Button/Button';
 import { PartOfDay, PrecipitationType, WeatherMeasurement, WindDirection } from '../../../models/Measurement';
-import { API_BASE_URL } from '../../../constants/constants';
+import { weatherService } from '../../../services/weatherService/weatherService';
 
-export function WeatherMeasurementForm() {
+type Props = {
+  getMeasurements: () => void
+}
+
+export function WeatherMeasurementForm({ getMeasurements }: Props) {
   const [date, setDate] = useState<string>('');
   const [partOfDay, setPartOfDay] = useState<PartOfDay>(PartOfDay.MORNING);
   const [precipitationType, setPrecipitationType] = useState<PrecipitationType>(PrecipitationType.CLOUD);
@@ -37,7 +41,7 @@ export function WeatherMeasurementForm() {
   };
 
   const sendWeatherData = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>, rewrite: boolean = false
   ) => {
     event.preventDefault();
     console.log(
@@ -62,27 +66,27 @@ export function WeatherMeasurementForm() {
 
     const measurementData: WeatherMeasurement = {
       date: getUTCTimestamp(),
-      part_of_day: Number(partOfDay),
-      precipitation_type: Number(precipitationType),
-      temperature: Number(temperature),
-      pressure: Number(pressure),
-      wind_speed: Number(windSpeed),
-      wind_direction: Number(windDirection),
-      force_overwrite: false,
+      part_of_day: partOfDay,
+      precipitation_type: precipitationType,
+      temperature: temperature,
+      pressure: pressure,
+      wind_speed: windSpeed,
+      wind_direction: windDirection,
+      force_overwrite: rewrite,
     }
 
-    console.log(measurementData)
+    const response = await weatherService.sendMeasurement(measurementData)
 
-    const response = await fetch(`${API_BASE_URL}/measures`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;'
-      },
-      body: JSON.stringify(measurementData)
-    })
+    if (response.status === 200) {
+      const json = await response.json()
+      console.log(json)
+      getMeasurements()
+    }
+    if (response.status === 204) {
+      const needRewrite = confirm('В базе уже есть изменение за указанный период. Перезаписать? ')
 
-    const jsonData = await response.json()
-    console.log(jsonData)
+      if (needRewrite) sendWeatherData(event, true) 
+    }
   };
 
   return (

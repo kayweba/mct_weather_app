@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-
 import { WeatherMeasurementOfDay } from 'models/Measurement';
 import { PrecipitationIcon } from './PrecipitationIcon';
 import { WindDirectionIcon } from './WindDirectionIcon';
 import cls from './WeatherData.module.css';
 import { Icons } from '../Icons';
-import { API_BASE_URL } from '../../constants/constants';
 import { getReadableDateFromTimestamp } from '../../utils/getReadableDate';
 
-export function WeatherData() {
-  const [weatherData, setWeatherData] = useState<WeatherMeasurementOfDay[]>([])
+type Props = {
+  data: WeatherMeasurementOfDay[],
+}
+
+export function WeatherData({ data }: Props) {
 
   const getAverageTemperature = (
     temperatures: Array<number | null>
@@ -22,26 +22,6 @@ export function WeatherData() {
     return null;
   };
 
-  useEffect(() => {
-
-    const makeRequest = async () => {
-      try {
-        
-        // TODO: Вынести запросы в services
-        const response = await fetch(`${API_BASE_URL}/measures`, {
-          method: "GET",
-          headers: {
-            'Content-Type': 'application/json;'
-          }
-        })
-        const jsonData = await response.json()
-        setWeatherData(jsonData)
-      } catch (error) {
-        alert(error)
-      }
-    }
-    makeRequest()
-  }, [])
 
   // TODO: Добавить проверку на null, чтобы не выводить лишние символы.
   return (
@@ -57,7 +37,7 @@ export function WeatherData() {
           </tr>
         </thead>
         <tbody>
-          {weatherData.map((day, index) => {
+          {data.map((day, index) => {
             return (
               <tr key={index}>
                 <td>{getReadableDateFromTimestamp(day.date)}</td>
