@@ -42,11 +42,13 @@ export function ConfigForm() {
           value={address}
           onChange={(event) => setAddress(event.currentTarget.value)}
           placeholder={'Адрес подключения к БД'}
+          title={'Пример адреса: http://127.0.0.1'}
         />
         <Input
           value={port}
           onChange={(event) => setPort(event.currentTarget.value)}
           placeholder={'Порт подключения к БД'}
+          title={'Пример порта: 5117'}
         />
         <label htmlFor={'log_level'}>Уровень логирования</label>
         <select
