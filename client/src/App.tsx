@@ -5,35 +5,60 @@ import { WeatherData } from './components/WeatherData/WeatherData';
 import { WeatherMeasurementOfDay } from './models/Measurement';
 import { weatherService } from './services/weatherService/weatherService';
 import './App.css';
+import { getReadableDateFromTimestamp } from './utils/getReadableDate';
 
 function App() {
-  const [weatherData, setWeatherData] = useState<WeatherMeasurementOfDay[]>([])
+  const [weatherData, setWeatherData] = useState<WeatherMeasurementOfDay[]>([]);
+  const [filteredData, setFilterData] = useState<WeatherMeasurementOfDay[]>([])
 
   const getMeasurements = () => {
     const makeRequest = async () => {
-        weatherService.getAllMeasurements().then(async (data) => {
+      weatherService
+        .getAllMeasurements()
+        .then(async (data) => {
           if (data.status === 200) {
-            setWeatherData(await data.json())
+            const json = await data.json()
+            setWeatherData(json);
+            setFilterData(json)
           }
           if (data.status === 404) {
-            alert('Неверно указан адрес или порт подключения к серверу. Проверьте параметры конфигурации и попробуйте снова!')
+            alert(
+              'Неверно указан адрес или порт подключения к серверу. Проверьте параметры конфигурации и попробуйте снова!'
+            );
           }
-        }).catch((error) => {
-          alert(`Ошибка при загрузке данных! Проверьте, верно ли указан адрес и порт сервера, а также состояние самого сервера!\n${error}`)
         })
+        .catch((error) => {
+          alert(
+            `Ошибка при загрузке данных! Проверьте, верно ли указан адрес и порт сервера, а также состояние самого сервера!\n${error}`
+          );
+        });
+    };
+    makeRequest();
+  };
+
+  const searchFn = (value: string, by: 'date') => {
+    switch (by) {
+      case 'date': {
+        const filtered = weatherData.filter((item) =>
+          getReadableDateFromTimestamp(item.date).includes(value)
+        );
+        setFilterData(filtered);
+        break;
+      }
+
+      default:
+        break;
     }
-    makeRequest()
-  }
+  };
 
   useEffect(() => {
-    getMeasurements()
-  }, [])
-
+    getMeasurements();
+  }, []);
 
   return (
     <div className={'container'}>
-      <LeftPanel getMeasurements={getMeasurements}/>
-      <WeatherData data={weatherData} />
+      <LeftPanel getMeasurements={getMeasurements} />
+      <WeatherData data={filteredData} search={searchFn} />
     </div>
   );
 }

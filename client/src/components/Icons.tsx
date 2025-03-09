@@ -6,6 +6,7 @@ import Rain from '../assets/rain.svg?react'
 import Snow from '../assets/snow.svg?react'
 import SnowWithRain from '../assets/snow_rain.svg?react'
 import PartyCloudy from '../assets/party_cloudy.svg?react'
+import Search from '../assets/search.svg?react'
 
 export const Icons = {
   Sun,
@@ -16,4 +17,5 @@ export const Icons = {
   Snow,
   SnowWithRain,
   PartyCloudy,
+  Search,
 }

@@ -4,12 +4,23 @@ import { WindDirectionIcon } from './WindDirectionIcon';
 import cls from './WeatherData.module.css';
 import { Icons } from '../Icons';
 import { getReadableDateFromTimestamp } from '../../utils/getReadableDate';
+import { useState } from 'react';
 
 type Props = {
-  data: WeatherMeasurementOfDay[],
-}
+  data: WeatherMeasurementOfDay[];
+  search(value: string, by: string): void
+};
 
-export function WeatherData({ data }: Props) {
+export function WeatherData({ data, search }: Props) {
+  const [isShowDateSearchInput, setIsShowSearchInput] =
+    useState<boolean>(false);
+  const [searchByDateInputValue, setSearchByDateInputValue] =
+    useState<string>('');
+
+  const onChangeSearchByDateInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchByDateInputValue(event.currentTarget.value)
+    search(event.currentTarget.value, 'date')
+  }
 
   const getAverageTemperature = (
     temperatures: Array<number | null>
@@ -22,14 +33,29 @@ export function WeatherData({ data }: Props) {
     return null;
   };
 
-
   // TODO: Добавить проверку на null, чтобы не выводить лишние символы.
   return (
     <div className={cls.wrapper}>
       <table className={cls.table}>
         <thead>
           <tr>
-            <th>Дата</th>
+            <th>
+              <div className={cls.thWithIcon}>
+                <p>Дата</p>
+                <Icons.Search
+                  className={cls.thIcon}
+                  onClick={() => setIsShowSearchInput(!isShowDateSearchInput)}
+                />
+              </div>
+              {isShowDateSearchInput && (
+                <input
+                  type="text"
+                  className={cls.searchInput}
+                  value={searchByDateInputValue}
+                  onChange={onChangeSearchByDateInputValue}
+                />
+              )}
+            </th>
             <th>Утро</th>
             <th>День</th>
             <th>Вечер</th>

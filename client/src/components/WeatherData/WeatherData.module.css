@@ -27,15 +27,16 @@ td {
   font-weight: 400;
   text-align: center;
   vertical-align: middle;
+  width: 200px;
 }
 
 .temperature, .wind, .pressure {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-left: 180px;
   box-sizing: content-box;
 }
 
@@ -70,4 +71,36 @@ td {
 
 .westernDirection {
   transform: rotate(270deg);
+}
+
+/* Стили для поиска, фильтрации и сортировки */
+.searchInput {
+  border: 1px solid grey;
+  width: 150px;
+  box-sizing: border-box;
+  padding: 0px 2px;
+  margin-top: 4px;
+}
+
+.thWithIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thIcon {
+  width: 15px;
+  height: 15px;
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+
+.thIcon path {
+  fill: #969696;
+}
+
+.thIcon:hover path {
+  fill: #636363;
+  transition: all 0.3s linear;
 }
