@@ -6,6 +6,7 @@ import { WeatherMeasurementOfDay } from './models/Measurement';
 import { weatherService } from './services/weatherService/weatherService';
 import './App.css';
 import { getReadableDateFromTimestamp } from './utils/getReadableDate';
+import { getAverageTemperature } from './utils/getAverageTemperature';
 
 function App() {
   const [weatherData, setWeatherData] = useState<WeatherMeasurementOfDay[]>([]);
@@ -36,7 +37,10 @@ function App() {
     makeRequest();
   };
 
-  const searchFn = (value: string, by: 'date' | 'morning') => {
+  const searchFn = (
+    value: string,
+    by: 'date' | 'morning' | 'afternoon' | 'evening' | 'average'
+  ) => {
     switch (by) {
       case 'date': {
         const filtered = weatherData.filter((item) =>
@@ -52,7 +56,35 @@ function App() {
         setFilterData(filtered);
         break;
       }
-
+      case 'afternoon':
+        {
+          const filtered = weatherData.filter((item) =>
+            String(item.afternoon_temperature).includes(value)
+          );
+          setFilterData(filtered);
+        }
+        break;
+      case 'evening':
+        {
+          const filtered = weatherData.filter((item) =>
+            String(item.evening_temperature).includes(value)
+          );
+          setFilterData(filtered);
+        }
+        break;
+      case 'average':
+        {
+          const filtered = weatherData.filter((item) => {
+            const avg = getAverageTemperature([
+              item.morning_temperature,
+              item.afternoon_temperature,
+              item.evening_temperature,
+            ]);
+            return String(avg).includes(value);
+          });
+          setFilterData(filtered);
+        }
+        break;
       default:
         break;
     }

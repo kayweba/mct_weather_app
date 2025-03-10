@@ -5,10 +5,11 @@ import cls from './WeatherData.module.css';
 import { Icons } from '../Icons';
 import { getReadableDateFromTimestamp } from '../../utils/getReadableDate';
 import { useState } from 'react';
+import { getAverageTemperature } from '../../utils/getAverageTemperature';
 
 type Props = {
   data: WeatherMeasurementOfDay[];
-  search(value: string, by: string): void
+  search(value: string, by: string): void;
 };
 
 export function WeatherData({ data, search }: Props) {
@@ -17,29 +18,58 @@ export function WeatherData({ data, search }: Props) {
   const [searchByDateInputValue, setSearchByDateInputValue] =
     useState<string>('');
 
-  const [isShowSearchMorningInput, setIsShowSearchMorningInput] = useState<boolean>(false)
-  const [searchByMorningInputValue, setSearchByMorningInputValue] = useState<string>('')
+  const [isShowSearchMorningInput, setIsShowSearchMorningInput] =
+    useState<boolean>(false);
+  const [searchByMorningInputValue, setSearchByMorningInputValue] =
+    useState<string>('');
 
-  const onChangeSearchByDateInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchByDateInputValue(event.currentTarget.value)
-    search(event.currentTarget.value, 'date')
-  }
+  const [isShowSearchAfternoonInput, setIsShowSearchAfternoonInput] =
+    useState<boolean>(false);
+  const [searchByAfternoonInputValue, setSearchByAfternoonInputValue] =
+    useState<string>('');
 
-  const onChangeSearchByMorningInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchByMorningInputValue(event.currentTarget.value)
-    search(event.currentTarget.value, 'morning')
-  }
+  const [isShowSearchEveningInput, setIsShowSearchEveningInput] =
+    useState<boolean>(false);
+  const [searchEveningInputValue, setSearchEveningInputValue] =
+    useState<string>('');
 
-  const getAverageTemperature = (
-    temperatures: Array<number | null>
-  ): number | null => {
-    const onlyExistsTemp = temperatures.filter(
-      (temperature) => temperature !== null
-    );
-    const sumNum = onlyExistsTemp.reduce((acc, number) => acc + number, 0);
-    if (onlyExistsTemp.length > 0) return sumNum / onlyExistsTemp.length;
-    return null;
+  const [isShowSearchAverageInput, setIsShowSearchAverageInput] = useState<boolean>(false)
+  const [searchAverageInputValue, setSearchAverageInputValue] = useState<string>('')
+
+  const onChangeSearchByDateInputValue = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchByDateInputValue(event.currentTarget.value);
+    search(event.currentTarget.value, 'date');
   };
+
+  const onChangeSearchByMorningInputValue = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchByMorningInputValue(event.currentTarget.value);
+    search(event.currentTarget.value, 'morning');
+  };
+
+  const onChangeSearchByAfternoonInputValue = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchByAfternoonInputValue(event.currentTarget.value);
+    search(event.currentTarget.value, 'afternoon');
+  };
+
+  const onChangeSearchByEveningInputValue = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchEveningInputValue(event.currentTarget.value);
+    search(event.currentTarget.value, 'evening');
+  };
+
+  const onChangeSearchByAverageInputValue = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchAverageInputValue(event.currentTarget.value)
+    search(event.currentTarget.value, 'average')
+  }
 
   // TODO: Добавить проверку на null, чтобы не выводить лишние символы.
   return (
@@ -65,11 +95,13 @@ export function WeatherData({ data, search }: Props) {
               )}
             </th>
             <th>
-            <div className={cls.thWithIcon}>
+              <div className={cls.thWithIcon}>
                 <p>Утро</p>
                 <Icons.Search
                   className={cls.thIcon}
-                  onClick={() => setIsShowSearchMorningInput(!isShowSearchMorningInput)}
+                  onClick={() =>
+                    setIsShowSearchMorningInput(!isShowSearchMorningInput)
+                  }
                 />
               </div>
               {isShowSearchMorningInput && (
@@ -78,13 +110,70 @@ export function WeatherData({ data, search }: Props) {
                   className={cls.searchInput}
                   value={searchByMorningInputValue}
                   onChange={onChangeSearchByMorningInputValue}
-                  placeholder='C&deg;'
+                  placeholder="C&deg;"
                 />
               )}
             </th>
-            <th>День</th>
-            <th>Вечер</th>
-            <th>Среднее</th>
+            <th>
+              <div className={cls.thWithIcon}>
+                <p>День</p>
+                <Icons.Search
+                  className={cls.thIcon}
+                  onClick={() =>
+                    setIsShowSearchAfternoonInput(!isShowSearchAfternoonInput)
+                  }
+                />
+              </div>
+              {isShowSearchAfternoonInput && (
+                <input
+                  type="text"
+                  className={cls.searchInput}
+                  value={searchByAfternoonInputValue}
+                  onChange={onChangeSearchByAfternoonInputValue}
+                  placeholder="C&deg;"
+                />
+              )}
+            </th>
+            <th>
+              <div className={cls.thWithIcon}>
+                <p>Вечер</p>
+                <Icons.Search
+                  className={cls.thIcon}
+                  onClick={() =>
+                    setIsShowSearchEveningInput(!isShowSearchEveningInput)
+                  }
+                />
+              </div>
+              {isShowSearchEveningInput && (
+                <input
+                  type="text"
+                  className={cls.searchInput}
+                  value={searchEveningInputValue}
+                  onChange={onChangeSearchByEveningInputValue}
+                  placeholder="C&deg;"
+                />
+              )}
+            </th>
+            <th>
+              <div className={cls.thWithIcon}>
+                <p>Среднее</p>
+                <Icons.Search
+                  className={cls.thIcon}
+                  onClick={() =>
+                    setIsShowSearchAverageInput(!isShowSearchAverageInput)
+                  }
+                />
+              </div>
+              {isShowSearchAverageInput && (
+                <input
+                  type="text"
+                  className={cls.searchInput}
+                  value={searchAverageInputValue}
+                  onChange={onChangeSearchByAverageInputValue}
+                  placeholder="C&deg;"
+                />
+              )}
+            </th>
           </tr>
         </thead>
         <tbody>
