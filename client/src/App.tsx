@@ -9,7 +9,7 @@ import { getReadableDateFromTimestamp } from './utils/getReadableDate';
 
 function App() {
   const [weatherData, setWeatherData] = useState<WeatherMeasurementOfDay[]>([]);
-  const [filteredData, setFilterData] = useState<WeatherMeasurementOfDay[]>([])
+  const [filteredData, setFilterData] = useState<WeatherMeasurementOfDay[]>([]);
 
   const getMeasurements = () => {
     const makeRequest = async () => {
@@ -17,9 +17,9 @@ function App() {
         .getAllMeasurements()
         .then(async (data) => {
           if (data.status === 200) {
-            const json = await data.json()
+            const json = await data.json();
             setWeatherData(json);
-            setFilterData(json)
+            setFilterData(json);
           }
           if (data.status === 404) {
             alert(
@@ -36,11 +36,18 @@ function App() {
     makeRequest();
   };
 
-  const searchFn = (value: string, by: 'date') => {
+  const searchFn = (value: string, by: 'date' | 'morning') => {
     switch (by) {
       case 'date': {
         const filtered = weatherData.filter((item) =>
           getReadableDateFromTimestamp(item.date).includes(value)
+        );
+        setFilterData(filtered);
+        break;
+      }
+      case 'morning': {
+        const filtered = weatherData.filter((item) =>
+          String(item.morning_temperature).includes(value)
         );
         setFilterData(filtered);
         break;

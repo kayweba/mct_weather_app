@@ -17,9 +17,17 @@ export function WeatherData({ data, search }: Props) {
   const [searchByDateInputValue, setSearchByDateInputValue] =
     useState<string>('');
 
+  const [isShowSearchMorningInput, setIsShowSearchMorningInput] = useState<boolean>(false)
+  const [searchByMorningInputValue, setSearchByMorningInputValue] = useState<string>('')
+
   const onChangeSearchByDateInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchByDateInputValue(event.currentTarget.value)
     search(event.currentTarget.value, 'date')
+  }
+
+  const onChangeSearchByMorningInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchByMorningInputValue(event.currentTarget.value)
+    search(event.currentTarget.value, 'morning')
   }
 
   const getAverageTemperature = (
@@ -56,7 +64,24 @@ export function WeatherData({ data, search }: Props) {
                 />
               )}
             </th>
-            <th>Утро</th>
+            <th>
+            <div className={cls.thWithIcon}>
+                <p>Утро</p>
+                <Icons.Search
+                  className={cls.thIcon}
+                  onClick={() => setIsShowSearchMorningInput(!isShowSearchMorningInput)}
+                />
+              </div>
+              {isShowSearchMorningInput && (
+                <input
+                  type="text"
+                  className={cls.searchInput}
+                  value={searchByMorningInputValue}
+                  onChange={onChangeSearchByMorningInputValue}
+                  placeholder='C&deg;'
+                />
+              )}
+            </th>
             <th>День</th>
             <th>Вечер</th>
             <th>Среднее</th>
