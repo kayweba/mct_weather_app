@@ -181,20 +181,20 @@ export function WeatherData({ data, search }: Props) {
               <tr key={index}>
                 <td>{getReadableDateFromTimestamp(day.date)}</td>
                 <td className={cls.tdWrapper}>
-                  {day.morning_temperature &&
+                  {day.morning_temperature !== null &&
                     <div className={cls.temperature}>
                       <p>{day.morning_temperature}&deg;</p>
                       {PrecipitationIcon(day.morning_precipitation_type)}
                     </div>
                   }
-                  {day.morning_wind_speed && 
+                  {day.morning_wind_speed !== null &&
                     <div className={cls.wind}>
                       <p>{day.morning_wind_speed} м/с</p>
                       {WindDirectionIcon(day.morning_wind_direction)}
                     </div>
                   }
                   {
-                    day.morning_pressure && 
+                    day.morning_pressure !== null &&
                       <div className={cls.pressure}>
                         <p>{day.morning_pressure} мм рт. ст.</p>
                       </div>
@@ -202,21 +202,21 @@ export function WeatherData({ data, search }: Props) {
                 </td>
                 <td>
                   {
-                    day.afternoon_temperature &&
+                    day.afternoon_temperature !== null &&
                     <div className={cls.temperature}>
                       <p>{day.afternoon_temperature}&deg;</p>
                       {PrecipitationIcon(day.afternoon_precipitation_type)}
                     </div>
                   }
                   {
-                    day.afternoon_wind_speed && 
+                    day.afternoon_wind_speed !== null &&
                     <div className={cls.wind}>
                       <p>{day.afternoon_wind_speed} м/с</p>
                       {WindDirectionIcon(day.afternoon_wind_direction)}
                     </div>
                   }
                   {
-                    day.afternoon_pressure &&
+                    day.afternoon_pressure !== null &&
                     <div className={cls.pressure}>
                       <p>{day.afternoon_pressure} мм рт. ст.</p>
                     </div>
@@ -224,21 +224,21 @@ export function WeatherData({ data, search }: Props) {
                 </td>
                 <td>
                   {
-                    day.evening_temperature &&
+                    day.evening_temperature !== null &&
                     <div className={cls.temperature}>
                       <p>{day.evening_temperature}&deg;</p>
                       {PrecipitationIcon(day.evening_precipitation_type)}
                     </div>
                   }
                   {
-                    day.evening_wind_speed && 
+                    day.evening_wind_speed !== null &&
                     <div className={cls.wind}>
                       <p>{day.evening_wind_speed} м/с</p>
                       {WindDirectionIcon(day.evening_wind_direction)}
                     </div>
                   }
                   {
-                    day.evening_pressure &&
+                    day.evening_pressure !== null &&
                     <div className={cls.pressure}>
                       <p>{day.evening_pressure} мм рт. ст.</p>
                     </div>

@@ -15,7 +15,7 @@ export type LogFn = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-const NO_LOG: LogFn = (message?: any, ...optionalParams: any[]) => {}
+const NO_LOG: LogFn = (_?: any, ...__: any[]) => {}
 
 class Logger {
   private static sInstance: Logger
