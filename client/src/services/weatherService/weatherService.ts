@@ -1,9 +1,8 @@
 import { WeatherMeasurement } from "../../models/Measurement";
-import { BASE_URL } from "../../utils/getURLFromLocalStorage";
 
 class WeatherService {
   public async getAllMeasurements() {
-    const response = await fetch(`${BASE_URL}/measures`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/measures`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json;'
@@ -13,7 +12,7 @@ class WeatherService {
   }
 
   public async sendMeasurement (data: WeatherMeasurement) {
-    const response = await fetch(`${BASE_URL}/measures`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/measures`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;'

@@ -71,7 +71,6 @@ export function WeatherData({ data, search }: Props) {
     search(event.currentTarget.value, 'average')
   }
 
-  // TODO: Добавить проверку на null, чтобы не выводить лишние символы.
   return (
     <div className={cls.wrapper}>
       <table className={cls.table}>
@@ -182,43 +181,68 @@ export function WeatherData({ data, search }: Props) {
               <tr key={index}>
                 <td>{getReadableDateFromTimestamp(day.date)}</td>
                 <td className={cls.tdWrapper}>
-                  <div className={cls.temperature}>
-                    <p>{day.morning_temperature}&deg;</p>
-                    {PrecipitationIcon(day.morning_precipitation_type)}
-                  </div>
-                  <div className={cls.wind}>
-                    <p>{day.morning_wind_speed} м/с</p>
-                    {WindDirectionIcon(day.morning_wind_direction)}
-                  </div>
-                  <div className={cls.pressure}>
-                    <p>{day.morning_pressure} мм рт. ст.</p>
-                  </div>
+                  {day.morning_temperature &&
+                    <div className={cls.temperature}>
+                      <p>{day.morning_temperature}&deg;</p>
+                      {PrecipitationIcon(day.morning_precipitation_type)}
+                    </div>
+                  }
+                  {day.morning_wind_speed && 
+                    <div className={cls.wind}>
+                      <p>{day.morning_wind_speed} м/с</p>
+                      {WindDirectionIcon(day.morning_wind_direction)}
+                    </div>
+                  }
+                  {
+                    day.morning_pressure && 
+                      <div className={cls.pressure}>
+                        <p>{day.morning_pressure} мм рт. ст.</p>
+                      </div>
+                  }
                 </td>
                 <td>
-                  <div className={cls.temperature}>
-                    <p>{day.afternoon_temperature}&deg;</p>
-                    {PrecipitationIcon(day.afternoon_precipitation_type)}
-                  </div>
-                  <div className={cls.wind}>
-                    <p>{day.afternoon_wind_speed} м/с</p>
-                    {WindDirectionIcon(day.afternoon_wind_direction)}
-                  </div>
-                  <div className={cls.pressure}>
-                    <p>{day.afternoon_pressure} мм рт. ст.</p>
-                  </div>
+                  {
+                    day.afternoon_temperature &&
+                    <div className={cls.temperature}>
+                      <p>{day.afternoon_temperature}&deg;</p>
+                      {PrecipitationIcon(day.afternoon_precipitation_type)}
+                    </div>
+                  }
+                  {
+                    day.afternoon_wind_speed && 
+                    <div className={cls.wind}>
+                      <p>{day.afternoon_wind_speed} м/с</p>
+                      {WindDirectionIcon(day.afternoon_wind_direction)}
+                    </div>
+                  }
+                  {
+                    day.afternoon_pressure &&
+                    <div className={cls.pressure}>
+                      <p>{day.afternoon_pressure} мм рт. ст.</p>
+                    </div>
+                  }
                 </td>
                 <td>
-                  <div className={cls.temperature}>
-                    <p>{day.evening_temperature}&deg;</p>
-                    {PrecipitationIcon(day.evening_precipitation_type)}
-                  </div>
-                  <div className={cls.wind}>
-                    <p>{day.evening_wind_speed} м/с</p>
-                    {WindDirectionIcon(day.evening_wind_direction)}
-                  </div>
-                  <div className={cls.pressure}>
-                    <p>{day.evening_pressure} мм рт. ст.</p>
-                  </div>
+                  {
+                    day.evening_temperature &&
+                    <div className={cls.temperature}>
+                      <p>{day.evening_temperature}&deg;</p>
+                      {PrecipitationIcon(day.evening_precipitation_type)}
+                    </div>
+                  }
+                  {
+                    day.evening_wind_speed && 
+                    <div className={cls.wind}>
+                      <p>{day.evening_wind_speed} м/с</p>
+                      {WindDirectionIcon(day.evening_wind_direction)}
+                    </div>
+                  }
+                  {
+                    day.evening_pressure &&
+                    <div className={cls.pressure}>
+                      <p>{day.evening_pressure} мм рт. ст.</p>
+                    </div>
+                  }
                 </td>
                 <td>
                   <div>

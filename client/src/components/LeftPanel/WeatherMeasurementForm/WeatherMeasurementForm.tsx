@@ -4,6 +4,8 @@ import { Button } from '../../UI/Button/Button';
 import { PartOfDay, PrecipitationType, WeatherMeasurement, WindDirection } from '../../../models/Measurement';
 import { weatherService } from '../../../services/weatherService/weatherService';
 
+import { LOG } from '../../../common/Logger';
+
 type Props = {
   getMeasurements: () => void
 }
@@ -17,52 +19,47 @@ export function WeatherMeasurementForm({ getMeasurements }: Props) {
   const [pressure, setPressure] = useState<number>(740);
   const [windSpeed, setWindSpeed] = useState<number>(0);
 
-  // const [error, setError] = useState<string[]>([])
+  const getUTCTimestamp = () => {
+    const utcTimestamp = new Date(Date.parse(date)).getTime() / 1000
+    LOG.V(`Получение даты, введенной пользователем в формате UTC (timestamp) -> ${utcTimestamp}`)
+    return utcTimestamp
+  }
 
-  // TODO: Переписать валидацию!
-  const checkIsValid = () => {
+  const getUTCTodayTimestamp = () => {
+    const todayUTCTimestamp = new Date().getTime() / 1000
+    LOG.V(todayUTCTimestamp) 
+    return todayUTCTimestamp
+  }
 
-    let isValid: boolean = true;
+  /*
+    Форма устроена так, что пользователь может оставить пустой только дату.
+    Этот случай и проверим.
+   */
+  const checkHasDate = () => {
+    if (!date) {
+      LOG.W('Для занесения измерения необходимо указать дату!')
+      alert('Для занесения измерения необходимо указать дату!')
+      return false
+    }
 
-    [
-      date,
-      partOfDay,
-      precipitationType,
-      windDirection,
-      temperature,
-      pressure,
-      windSpeed,
-    ].forEach(parameter => {
-      if (parameter === null || parameter === '') {
-        isValid = false
-      }
-    })
-    return isValid
+    if (getUTCTimestamp() > getUTCTodayTimestamp()) {
+      LOG.W('Выбранная дата должна быть меньше или равной сегодняшней!')
+      alert('Выбранная дата должна быть меньше или равной сегодняшней!')
+      return false
+    }
+
+    return true
   };
+
 
   const sendWeatherData = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>, rewrite: boolean = false
   ) => {
     event.preventDefault();
-    console.log(
-      date,
-      partOfDay,
-      precipitationType,
-      windDirection,
-      temperature,
-      pressure,
-      windSpeed
-    );
 
-    const isValid = checkIsValid();
-    if (!isValid) {
-      alert('Не все поля формы заполнены!');
-      return
-    }
-
-    const getUTCTimestamp = () => {
-      return new Date(Date.parse(date)).getTime() / 1000
-    }
+    const isValid = checkHasDate();
+    // Если что-то невалидно - ничего не отправим.
+    if (!isValid) return
 
     const measurementData: WeatherMeasurement = {
       date: getUTCTimestamp(),
@@ -74,18 +71,23 @@ export function WeatherMeasurementForm({ getMeasurements }: Props) {
       wind_direction: windDirection,
       force_overwrite: rewrite,
     }
-
-    const response = await weatherService.sendMeasurement(measurementData)
-
-    if (response.status === 200) {
-      const json = await response.json()
-      console.log(json)
-      getMeasurements()
-    }
-    if (response.status === 204) {
-      const needRewrite = confirm('В базе уже есть изменение за указанный период. Перезаписать? ')
-
-      if (needRewrite) sendWeatherData(event, true) 
+    try {
+      const response = await weatherService.sendMeasurement(measurementData)
+  
+      if (response.status === 200) {
+        const json = await response.json()
+        LOG.V('Успешная отправка измерения, response -> ', json)
+        getMeasurements()
+      }
+      if (response.status === 204) {
+        LOG.W('Попытка записать данные за уже добавленный период')
+        const needRewrite = confirm('В базе уже есть изменение за указанный период. Перезаписать? ')
+  
+        if (needRewrite) sendWeatherData(event, true) 
+      }
+    } catch (error) {
+      alert('Произошла ошибка при попытке добавления измерения. Проверьте настройки сервера, доступность БД и попробуйте снова')
+      LOG.E('Произошла ошибка при попытке добавления измерения -> ', error)
     }
   };
 
@@ -99,6 +101,7 @@ export function WeatherMeasurementForm({ getMeasurements }: Props) {
             className={cls.date}
             value={date}
             onChange={(event) => setDate(event.currentTarget.value)}
+            max={Date.now()}
           />
         </div>
         <div className={cls.selectWrapper}>
